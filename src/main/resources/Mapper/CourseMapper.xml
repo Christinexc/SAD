@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.example.springboot.mapper.CourseMapper">
+    <update id="updateStudentCourse">
+        update student_course
+        set
+            student_course.success=#{param}
+        <where>
+            student_id=#{studentId} and course_id=#{courseId}
+        </where>
+    </update>
+    <update id="updateEStudentCourse">
+        update student_course
+        set
+            student_course.evaluation=#{param}
+        <where>
+            student_id=#{studentId} and course_id=#{courseId}
+        </where>
+    </update>
+
+        <delete id="deleteStudentCourse">
+        delete from student_course where student_id= #{studentId} and course_id= #{courseId}
+    </delete>
+
+        <insert id="setStudentCourse">
+        insert into student_course(student_id,course_id,fee_status,book_status,check_in,evaluate_status,success) values ( #{studentId},#{courseId},false,false,false,false,false)
+    </insert>
+
+        <select id="findPage" resultType="com.example.springboot.entity.Course">
+        select  sys_course.*,sys_user.nickname as teacher from sys_course
+        left join sys_user
+        on sys_course.teacher_id=sys_user.id
+        <where>
+            <if test="name!=null and name!=''">
+                and name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findStuPage" resultType="com.example.springboot.entity.Course">
+        select  sys_course.*,sys_user.nickname as teacher from sys_course
+        left join sys_user
+        on sys_course.teacher_id=sys_user.id
+        where sys_course.id not in (
+            select course_id from student_course
+            where student_id=#{studentId}
+            )
+    </select>
+</mapper>

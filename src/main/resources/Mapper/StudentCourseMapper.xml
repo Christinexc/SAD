@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.example.springboot.mapper.StudentCourseMapper">
+    <resultMap id="pageUser" type="com.example.springboot.entity.StudentCourse">
+        <result column="nickname" property="nickname"/>
+        <result column="student_id" property="studentId"/>
+        <result column="course_id" property="courseId"/>
+        <result column="fee_status" property="feeStatus"/>
+        <result column="book_status" property="bookStatus"/>
+        <result column="check_in" property="checkIn"/>
+        <result column="evaluate_status" property="evaluateStatus"/>
+        <result column="evaluation" property="evaluation"/>
+        <result column="success" property="success"/>
+        <collection property="courses" javaType="java.util.ArrayList" ofType="com.example.springboot.entity.Course">
+            <result column="name" property="name"/>
+            <result column="fee" property="fee"/>
+            <result column="coursetype" property="coursetype"/>
+            <result column="coursetime" property="coursetime"/>
+            <result column="evaluation_status" property="evaluationStatus"/>
+        </collection>
+
+    </resultMap>
+    <update id="updateStuM">
+        update student_course
+        set
+        <if test="book_status!=null">
+            book_status=#{book_status},
+        </if>
+        <if test="check_in!=null">
+            check_in=#{check_in},
+        </if>
+        <if test="fee_status!=null">
+            fee_status=#{fee_status}
+        </if>
+        where
+            student_id=#{stu_id} and course_id=#{course_id}
+    </update>
+
+    <select id="findPage" resultMap="pageUser">
+        select student_course.* ,sys_course.*,sys_user.username,sys_user.nickname from
+                sys_user,student_course,sys_course
+        <where> student_course.student_id=sys_user.id
+          and student_course.course_id=sys_course.id
+
+        <if test="id!='-1'">
+            and sys_user.id=#{id}
+        </if>
+        <if test="course_id!='-1'">
+            and sys_course.id=#{course_id}
+        </if>
+        </where>
+    </select>
+</mapper>

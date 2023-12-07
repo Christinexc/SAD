@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.example.springboot.mapper.UserMapper">
+    <resultMap id="pageUser" type="com.example.springboot.entity.User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="email" property="email"/>
+        <result column="address" property="address"/>
+        <result column="phone" property="phone"/>
+        <result column="role" property="role"/>
+        <collection property="courses" javaType="java.util.ArrayList" ofType="com.example.springboot.entity.Course">
+            <result column="name" property="name"/>
+            <result column="coursetime" property="coursetime"/>
+        </collection>
+    </resultMap>
+    <resultMap id="rolePage" type="com.example.springboot.entity.User">
+        <result column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="email" property="email"/>
+        <result column="address" property="address"/>
+        <result column="phone" property="phone"/>
+        <result column="role" property="role"/>
+    </resultMap>
+
+    <select id="findPage" resultMap="pageUser">
+        select sys_user.*,sys_course.* from sys_user
+        left join sys_course
+        on sys_user.id=sys_course.teacher_id
+       <where>
+           sys_course.teacher_id=#{id}
+       </where>
+    </select>
+    <select id="findRolePage" resultMap="rolePage">
+        select sys_user.*,sys_role.id roleId
+        from sys_user join sys_role
+        <where>
+            sys_user.role=sys_role.flag
+        and sys_role.id=#{roleId}
+        </where>
+
+    </select>
+</mapper>

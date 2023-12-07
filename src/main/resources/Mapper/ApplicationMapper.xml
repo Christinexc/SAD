@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.example.springboot.mapper.ApplicationMapper">
+    <resultMap id="pageApplication" type="com.example.springboot.entity.Application">
+        <result column="id" property="id"/>
+        <result column="company_id" property="companyId"/>
+        <result column="comecompany" property="comecompany"/>
+        <result column="status" property="status"/>
+        <result column="techname" property="techname"/>
+        <result column="introduce" property="introduce"/>
+        <result column="opinion" property="opinion"/>
+    </resultMap>
+
+    <select id="findPage" resultType="com.example.springboot.entity.Application">
+        select *
+        from sys_application
+        <if test="id!='-1'">
+            <where>
+                company_id=#{id}
+            </where>
+        </if>
+
+
+    </select>
+</mapper>
